@@ -1,6 +1,7 @@
-title: Hello
-tags: Foo
-slug: hello
+title: Your friendly neighborhood article generator
+tags: Other Tag
+poster: medias/image.jpg
+slug: your-friendy-neighborhood-article-generator
 
 # NewsGen:  Your friendly neighborhood article generator
 

@@ -1,12 +1,13 @@
 import os
 import shutil
+import sass
 from markdown2 import markdown
 from jinja2 import Environment, FileSystemLoader
 
 env = Environment(loader=FileSystemLoader('_templates'))
 tag_template = env.get_template('tag.html')
 post_template = env.get_template('post.html')
-feed_template = env.get_template('feed.html')
+feed_template = env.get_template('core-feed.html')
 
 def removeDir(dirPath):
   if os.path.isdir(dirPath):
@@ -27,6 +28,9 @@ def copyDirectory(src, dest):
 removeDir('./dist/')
 
 # Prepare posts and tags
+distDir = './dist/'
+publicDir = './'
+publicPostDir = publicDir + 'posts/'
 POSTS = []
 TAGS = set()
 
@@ -41,7 +45,8 @@ for md_post in os.listdir('_content/posts'):
         post_data = {
           'title' : raw_post.metadata['title'],
           'tags' : [tag.strip() for tag in raw_post.metadata['tags'].split(",")],
-          'slug' : 'posts/' + raw_post.metadata['slug'],
+          'slug' : publicPostDir + raw_post.metadata['slug'],
+          'poster' : publicDir + raw_post.metadata['poster'],
           'content' : raw_post
         }
         POSTS.append(post_data)
@@ -80,3 +85,7 @@ with open(feed_file_path, 'w') as file:
 # Copy and move medias folder
 # TO-DO : process all medias with compressor
 copyDirectory('./_content/medias/', './dist/medias')
+
+# SCSS
+# https://sass.github.io/libsass-python/frameworks/flask.html#directory-layout
+sass.compile(dirname=('./', './dist/'), output_style='compressed')
